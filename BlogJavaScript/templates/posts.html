@@ -1,8 +1,14 @@
+<div class="row-paging">
+    {{#pages}}
+    <a class="button-paging" style="color:white;" href="#/?page={{.}}">Page {{.}}</a>
+    {{/pages}}
+</div>
+
 {{#blogPosts}}
 <li class="single-post">
     <article id="post-{{postId}}">
         <div class="dot">&nbsp;</div>
-        <h3 class="title">{{title}}</h3>
+        <a href="#/post/{{_id}}"><h3 class="title">{{title}}</h3></a>
         <p class="subtitle">Posted on {{date}} by {{author}}</p>
         <p class="content">{{{content}}}</p>
     </article>

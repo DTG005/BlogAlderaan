@@ -12,6 +12,7 @@
 
     let selector = ".wrapper";
     let mainContentSelector = ".main-content";
+    var postsPerPage = 6;
 
     let homeView = new HomeView(selector, mainContentSelector);
     let homeController = new HomeController(homeView, requester, baseUrl, appId);
@@ -25,17 +26,22 @@
     initEventServices();
 
     onRoute("#/", function () {
+
+        //here we test it we can get the query param named page
+        // try http://localhost:59887/BlogJavaScript/index.html#/?page=2
+        //and open the console to see the result
+        var currentPage = this.params['page'];
+        console.log(currentPage);
         if (!authService.isLoggedIn()) {
-            homeController.showGuestPage();
+            homeController.showGuestPage(currentPage, postsPerPage);
         }
         else {
-            homeController.showUserPage();
+            homeController.showUserPage(currentPage, postsPerPage);
         }
     });
 
     onRoute("#/post-:id", function () {
-        let top = $("#post-" + this.params['id']).position().top;
-        $(window).scrollTop(top);
+        homeController.showSinglePost();
     });
 
     onRoute("#/login", function () {
@@ -55,7 +61,16 @@
             fullname: sessionStorage['fullname']
         };
 
+
+
         postController.showCreatePostPage(data, authService.isLoggedIn());
+    });
+    onRoute("#/post/:id", function () {
+        //sessionStorage.setItem('id', this.params['id']);
+        homeController.getArticle(this.params['id']);
+    });
+    onRoute("#/about", function () {
+        homeView.showAboutPage(authService.isLoggedIn());
     });
 
     bindEventHandler('login', function (ev, data) {
@@ -70,5 +85,5 @@
         postController.createPost(data);
     });
 
-    run('#/');
+    run("#/");
 })();
